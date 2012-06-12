@@ -4,11 +4,15 @@
 
 (load "base.lisp")
 (load "poj.lisp")
+(load "aoj.lisp")
 
 (defvar setting
     '((poj . ((user . "username")
               (pass . "password")
               (ext-lang-map . (("cpp" . "G++") ("cc" . "G++") ("c" . "GCC") ("java" . "Java")))))
+      (aoj . ((user . "username")
+              (pass . "password")
+              (ext-lang-map . (("cpp" . "C++11") ("cc" . "C++11") ("c" . "C") ("java" . "JAVA")))))
       ))
 
 (defun get-args ()
@@ -40,6 +44,12 @@
                      :user (setting 'poj 'user)
                      :pass (setting 'poj 'pass)
                      :ext-lang-map (setting 'poj 'ext-lang-map))))
+        ((string= judge "aoj")
+         (setq oj (make-instance 'AOJ
+                     :id (parse-integer number)
+                     :user (setting 'aoj 'user)
+                     :pass (setting 'aoj 'pass)
+                     :ext-lang-map (setting 'aoj 'ext-lang-map))))
         (t (usage)
            (quit)))
   (cond ((string= command "get")

@@ -1,4 +1,5 @@
 (require :drakma)
+(require :s-http-client)
 
 (defclass OJ ()
      ((id :accessor id
@@ -19,9 +20,9 @@
 
 (defmethod get-sample ((c OJ))
   (princ (format nil "Get sample ~A ..." (id c)))
-  (multiple-value-bind (body status header)
-      (drakma:http-request (format nil "~A~A~A" (url c) (url-problem-id c) (id c)))
-    (declare (ignore status header))
+  (multiple-value-bind (body status header uri kept)
+      (s-http-client:do-http-request (format nil "~A~A~A" (url c) (url-problem-id c) (id c)))
+    (declare (ignore status header uri kept))
     ;(format t "~&Status: ~A~%Body: ~A~%Header: ~A~%" status body header)
     (with-open-file (stream (format nil "~A~A" (id c) sample-infile-ext)
                             :direction :output

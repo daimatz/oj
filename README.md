@@ -33,6 +33,7 @@ Where arguments are below:
 Online Judge System. Current supporting systems are:
 
 - poj: [PKU Judge Online](http://poj.org/)
+- aoj: [AIZU ONLINE JUDGE](http://judge.u-aizu.ac.jp/onlinejudge/)
 
 ### &lt;command&gt;
 
@@ -49,6 +50,7 @@ Requirements
 Following Common Lisp libraries are required:
 
 - [CL-PPCRE](http://weitz.de/cl-ppcre/)
+- [S-HTTP-CLIENT](http://homepage.mac.com/svc/s-http-client/)
 - [DRAKMA](http://weitz.de/drakma/)
 - [ContextL](http://common-lisp.net/project/closer/contextl.html)
 
@@ -59,5 +61,6 @@ You can easily install these libraries by using [Quicklisp](http://www.quicklisp
     (quicklisp-quickstart:install)
     (ql:add-to-init-file)
     (ql:quickload :cl-ppcre)
+    (ql:quickload :s-http-client)
     (ql:quickload :drakma)
     (ql:quickload :contextl)
