@@ -13,11 +13,11 @@
 
 (defun get-args ()
   #+allegro (system:command-line-arguments)
-  #+sbcl sb-ext:*posix-argv*
+  #+sbcl (cdr sb-ext:*posix-argv*)
   #+clisp ext:*args*
-  #+ecl (si:command-args)
+  #+ecl (cddr (cddr (si:command-args)))
   #+cmu ext:*command-line-words*
-  #+ccl ccl:*command-line-argument-list*
+  #+ccl (cdr (cdddr ccl:*command-line-argument-list*))
   #+lispworks system:*line-arguments-list*)
 
 (defun setting (judge param)
@@ -31,9 +31,9 @@
 
 (let* ((oj nil)
        (args (get-args))
-       (judge (nth 1 args))
-       (command (nth 2 args))
-       (number (nth 3 args)))
+       (judge (nth 0 args))
+       (command (nth 1 args))
+       (number (nth 2 args)))
   (cond ((string= judge "poj")
          (setq oj (make-instance 'POJ
                      :id (parse-integer number)
