@@ -52,7 +52,7 @@ Following Common Lisp libraries are required:
 - [DRAKMA](http://weitz.de/drakma/)
 - [ContextL](http://common-lisp.net/project/closer/contextl.html)
 
-You can easily install these libraries using [Quicklisp](http://www.quicklisp.org/).
+You can easily install these libraries by using [Quicklisp](http://www.quicklisp.org/).
 [Download Quicklisp](http://beta.quicklisp.org/quicklisp.lisp) and eval following codes in your Common Lisp system.
 
     (load "quicklisp.lisp")
