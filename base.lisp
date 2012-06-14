@@ -1,5 +1,5 @@
-(require :drakma)
-(require :s-http-client)
+(ql:quickload :drakma)
+(ql:quickload :s-http-client)
 
 (defclass OJ ()
      ((id :accessor id

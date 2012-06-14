@@ -1,4 +1,4 @@
-(require :cl-ppcre)
+(ql:quickload :cl-ppcre)
 (load "base.lisp")
 
 (defclass POJ (OJ)
