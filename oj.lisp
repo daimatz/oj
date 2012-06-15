@@ -18,6 +18,8 @@
               (ext-lang-map . (("cpp" . "C++11") ("cc" . "C++11") ("c" . "C") ("java" . "JAVA")))))
       ))
 
+(load "setting.lisp")
+
 (defun get-args ()
   #+allegro (system:command-line-arguments)
   #+sbcl (cdr sb-ext:*posix-argv*)
@@ -178,7 +180,8 @@
   (cond ((string= command "get")
          (get-sample oj))
         ((string= command "submit")
-         (submit oj nil))
+         (with-active-layers (cookie-layer)
+           (submit oj nil)))
         (t (print-usage)
            (ccl:quit))))
 
