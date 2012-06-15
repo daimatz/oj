@@ -180,8 +180,10 @@
   (cond ((string= command "get")
          (get-sample oj))
         ((string= command "submit")
-         (with-active-layers (cookie-layer)
-           (submit oj nil)))
+         (if (member judge '("poj") :test 'string=)
+             (with-active-layers (cookie-layer)
+               (submit oj nil))
+             (submit oj nil)))
         (t (print-usage)
            (ccl:quit))))
 
