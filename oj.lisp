@@ -1,3 +1,8 @@
+(ql:quickload :contextl)
+(ql:quickload :drakma)
+(ql:quickload :s-http-client)
+(ql:quickload :cl-ppcre)
+
 (in-package :contextl-user)
 
 (defvar sample-infile-ext ".in")
@@ -30,11 +35,6 @@
   (format t "  <judge>:   Online Judge System. poj, ...~%")
   (format t "  <command>: Command. 'get' or 'submit'~%")
   (format t "  <number>:  Problem Number.~%"))
-
-(ql:quickload :contextl)
-(ql:quickload :drakma)
-(ql:quickload :s-http-client)
-(ql:quickload :cl-ppcre)
 
 (deflayer cookie-layer)
 
@@ -98,10 +98,14 @@
                             (setq str (format nil "~A~A~%" str line)))
                     str))))
     (format t "Submit as ~A code ...~%" (cdr (assoc ext (oj-ext-lang-map c) :test 'string=)))
-    (drakma:http-request (format nil "~A~A" (oj-url c) (oj-url-submit c))
-     :method :post
-     :parameters (funcall (oj-submit-params-func c) source ext)
-     :cookie-jar (oj-cookie c))))
+    (let ((lang (cdr (assoc
+                      (cdr (assoc ext (oj-ext-lang-map c) :test 'string=))
+                      (oj-lang-field c)
+                      :test 'string=))))
+      (drakma:http-request (format nil "~A~A" (oj-url c) (oj-url-submit c))
+       :method :post
+       :parameters (funcall (oj-submit-params-func c) source lang)
+       :cookie-jar (oj-cookie c)))))
 
 (define-layered-method submit
     :in cookie-layer ((c OJ) file)
@@ -132,12 +136,9 @@
                                                (ppcre:register-groups-bind (nil nil nil out)
                                                 ("<pre class=\"sio\">((.|\\r|\\n)+?)<\/pre>(.|\\r|\\n)+?<pre class=\"sio\">((.|\\r|\\n)+?)<\/pre>" html)
                                                 (format nil "~A~%" out)))
-                       :submit-params-func #'(lambda (source ext)
-                                               `(("language" . ,(cdr (assoc
-                                                                      (cdr (assoc ext (oj-ext-lang-map c) :test 'string=))
-                                                                      (oj-lang-field c)
-                                                                      :test 'string=)))
-                                                 ("problem_id" . ,(format nil "~A" (oj-id c)))
+                       :submit-params-func #'(lambda (source lang)
+                                               `(("language" . ,lang)
+                                                 ("problem_id" . ,number)
                                                  ("source" . ,source)
                                                  ("submit" . "Submit")))
                        :url "http://poj.org/"
@@ -160,14 +161,11 @@
                                              (ppcre:register-groups-bind (nil out)
                                               ("<[hH][1-6]>Output for the Sample Input<\/[hH][1-6]>(.|\\r|\\n)+?<pre>[\\r\\n]+?((.|\\r|\\n)+?)[\\r\\n]+?<\/pre>" html)
                                               (format nil "~A~%" out)))
-                     :submit-params-func #'(lambda (source ext)
+                     :submit-params-func #'(lambda (source lang)
                                              `(("userID" . ,(setting 'aoj 'user))
                                                ("password" . ,(setting 'aoj 'pass))
                                                ("problemNO" . ,number)
-                                               ("language" . ,(cdr (assoc
-                                                                    (cdr (assoc ext (oj-ext-lang-map c) :test 'string=))
-                                                                    (oj-lang-field c)
-                                                                    :test 'string=)))
+                                               ("language" . ,lang)
                                                ("sourceCode" . ,source)
                                                ("submit" . "Send")))
                      :url "http://judge.u-aizu.ac.jp/onlinejudge/"
